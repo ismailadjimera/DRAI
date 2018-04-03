@@ -781,8 +781,9 @@ correct_cle <- function(data, cle){
 var<-data[[paste(cle)]]
 test<-data%>%
           mutate_at(vars(starts_with("V")), funs(.*var))
-          #mutate_each(funs(.*var), starts_with("V"))
-test<-test %>% summarize_each(funs(sum), starts_with("V"))  
+          #mutate_each(funs(.*var), starts_with("V")) vars(starts_with("weight_"))
+#test<-test %>% summarize_each(funs(sum), starts_with("V"))  
+test<-test %>% summarize_at(vars(starts_with("V")),funs(sum))  
 test<-as.data.frame(t(test))
 
 
@@ -1003,7 +1004,8 @@ On peut maintenat observer comment les charges se sont réparties sur les activit
 
 ```{r message=FALSE, warning=FALSE}
 table_pivot<-data_cascade%>%
-  mutate_each(funs(replace(., is.na(.), 0)),starts_with("charge_code_"))%>%
+  #mutate_each(funs(replace(., is.na(.), 0)),starts_with("charge_code_"))%>%
+  mutate_at(vars(starts_with("charge_code_")),funs(replace(., is.na(.), 0)))%>%
   group_by(code,Lib_Code)%>%
   arrange(Code_manuel)%>%
   summarise_each(funs(sum),starts_with("charge_code_"))
